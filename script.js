@@ -1,19 +1,23 @@
-// script.js
-async function loadReview() {
-  const textBox = document.getElementById("reviewText");
-  textBox.innerText = "AI likh raha hai review… ⏳";
+const reviewTextEl = document.getElementById('reviewText');
+const generateBtn = document.getElementById('generateBtn');
+const reviewBtn = document.getElementById('reviewBtn');
 
+async function loadReview() {
+  reviewTextEl.innerText = "✍️ AI likh raha hai review…";
   try {
-    const res = await fetch("/.netlify/functions/generate-review");
+    const res = await fetch('/.netlify/functions/ai-review');
+    if (!res.ok) throw new Error('Server error');
     const json = await res.json();
-    textBox.innerText = json.review;
+    reviewTextEl.innerText = json.review || "IK MART ekdam perfect shop hai — low price, high style 💖";
   } catch (err) {
-    textBox.innerText = "IK MART ekdam perfect shop hai — low price, high style 💖";
+    console.error(err);
+    reviewTextEl.innerText = "IK MART ekdam perfect shop hai — low price, high style 💖";
   }
 }
 
-document.getElementById("reviewBtn").addEventListener("click", () => {
-  window.open("https://www.google.com/search?kgmid=%2Fg%2F11c1psxtm9", "_blank");
-});
+generateBtn.addEventListener('click', loadReview);
 
-window.onload = loadReview;
+reviewBtn.addEventListener('click', () => {
+  // open Google Maps business review page
+  window.open('https://www.google.com/search?kgmid=%2Fg%2F11c1psxtm9', '_blank');
+});
